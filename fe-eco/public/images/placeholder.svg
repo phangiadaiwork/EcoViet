@@ -1,0 +1,12 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#F5F5F5"/>
+  <rect x="160" y="160" width="80" height="80" fill="#DDDDDD"/>
+  <path d="M175 185L185 175L195 185V195L185 205L175 195V185Z" fill="#BBBBBB"/>
+  <circle cx="190" cy="180" r="3" fill="#BBBBBB"/>
+  <text x="200" y="240" font-family="Arial, sans-serif" font-size="16" fill="#888888" text-anchor="middle">
+    No Image
+  </text>
+  <text x="200" y="260" font-family="Arial, sans-serif" font-size="14" fill="#AAAAAA" text-anchor="middle">
+    Available
+  </text>
+</svg>

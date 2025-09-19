@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id                    String      @id @default(uuid())
+  name                  String
+  email                 String      @unique
+  password              String
+  address               String
+  phone                 String      @unique
+  avatar                String?
+  gender                Gender      @default(Male)
+  description           String?
+  refresh_token         String?
+  roleId                Int
+  createAt              DateTime    @default(now())
+  updateAt              DateTime    @updatedAt
+  isDeleted             Boolean     @default(false)
+  newsletter_subscribed Boolean     @default(false)
+  two_factor_enabled    Boolean     @default(false)
+  two_factor_secret     String?
+  cart_items            CartItems[]
+  orders                Orders[]
+  reviews               Reviews[]
+  role                  Roles       @relation(fields: [roleId], references: [id])
+  wishlist              Wishlist[]
+}
+
+model Roles {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createAt  DateTime @default(now())
+  updateAt  DateTime @updatedAt
+  isDeleted Boolean  @default(false)
+  User      Users[]
+}
+
+model Categories {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  image       String?
+  slug        String       @unique
+  parent_id   String?
+  createAt    DateTime     @default(now())
+  updateAt    DateTime     @updatedAt
+  isDeleted   Boolean      @default(false)
+  parent      Categories?  @relation("CategoryHierarchy", fields: [parent_id], references: [id])
+  children    Categories[] @relation("CategoryHierarchy")
+  products    Products[]
+}
+
+model Products {
+  id               String       @id @default(uuid())
+  name             String
+  description      String
+  price            Decimal      @db.Decimal(10, 2)
+  sale_price       Decimal?     @db.Decimal(10, 2)
+  sku              String       @unique
+  stock            Int
+  images           String[]
+  slug             String       @unique
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
+  weight           Decimal?     @db.Decimal(8, 2)
+  dimensions       String?
+  brand            String?
+  category_id      String
+  createAt         DateTime     @default(now())
+  updateAt         DateTime     @updatedAt
+  isDeleted        Boolean      @default(false)
+  cart_items       CartItems[]
+  order_items      OrderItems[]
+  category         Categories   @relation(fields: [category_id], references: [id])
+  reviews          Reviews[]
+  wishlist         Wishlist[]
+}
+
+model Orders {
+  id               String       @id @default(uuid())
+  order_number     String       @unique
+  user_id          String
+  total_amount     Decimal      @db.Decimal(10, 2)
+  shipping_fee     Decimal      @default(0) @db.Decimal(10, 2)
+  tax_amount       Decimal      @default(0) @db.Decimal(10, 2)
+  discount_amount  Decimal      @default(0) @db.Decimal(10, 2)
+  shipping_name    String
+  shipping_email   String
+  shipping_phone   String
+  shipping_address String
+  billing_name     String?
+  billing_email    String?
+  billing_phone    String?
+  billing_address  String?
+  status           OrderStatus  @default(PENDING)
+  notes            String?
+  createAt         DateTime     @default(now())
+  updateAt         DateTime     @updatedAt
+  isDeleted        Boolean      @default(false)
+  order_items      OrderItems[]
+  user             Users        @relation(fields: [user_id], references: [id])
+  payments         Payments[]
+}
+
+model OrderItems {
+  id         String   @id @default(uuid())
+  order_id   String
+  product_id String
+  quantity   Int
+  price      Decimal  @db.Decimal(10, 2)
+  total      Decimal  @db.Decimal(10, 2)
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  order      Orders   @relation(fields: [order_id], references: [id])
+  product    Products @relation(fields: [product_id], references: [id])
+}
+
+model Payments {
+  id                       String        @id @default(uuid())
+  order_id                 String
+  amount                   Decimal       @db.Decimal(10, 2)
+  payment_method           PaymentMethod
+  payment_status           PaymentStatus @default(PENDING)
+  transaction_id           String?
+  payment_gateway_response String?
+  createAt                 DateTime      @default(now())
+  updateAt                 DateTime      @updatedAt
+  order                    Orders        @relation(fields: [order_id], references: [id])
+}
+
+model Reviews {
+  id         String   @id @default(uuid())
+  user_id    String
+  product_id String
+  rating     Int
+  title      String?
+  comment    String
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  product    Products @relation(fields: [product_id], references: [id])
+  user       Users    @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, product_id])
+}
+
+model CartItems {
+  id         String   @id @default(uuid())
+  user_id    String
+  product_id String
+  quantity   Int
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  product    Products @relation(fields: [product_id], references: [id])
+  user       Users    @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, product_id])
+}
+
+model Wishlist {
+  id         String   @id @default(uuid())
+  user_id    String
+  product_id String
+  createAt   DateTime @default(now())
+  product    Products @relation(fields: [product_id], references: [id])
+  user       Users    @relation(fields: [user_id], references: [id])
+
+  @@unique([user_id, product_id])
+}
+
+model Coupons {
+  id             String    @id @default(uuid())
+  code           String    @unique
+  description    String?
+  discount_type  String
+  discount_value Decimal   @db.Decimal(10, 2)
+  minimum_amount Decimal?  @db.Decimal(10, 2)
+  usage_limit    Int?
+  used_count     Int       @default(0)
+  expires_at     DateTime?
+  createAt       DateTime  @default(now())
+  updateAt       DateTime  @updatedAt
+  isDeleted      Boolean   @default(false)
+}
+
+
+
+enum Gender {
+  Male
+  Female
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  PAYPAL
+  VNPAY
+}

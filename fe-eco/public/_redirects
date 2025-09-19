@@ -1,0 +1,3 @@
+# Netlify/Vercel redirects for dynamic meta tags
+/products/*  /api/meta-tags?path=:splat  200
+/*           /index.html   200

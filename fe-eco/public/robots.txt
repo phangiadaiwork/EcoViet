@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Chặn các thư mục hệ thống
+Disallow: /admin/
+Disallow: /api/
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /private/
+Disallow: /_next/
+Disallow: /dist/
+Disallow: /build/
+
+# Chặn các file cấu hình
+Disallow: /*.json$
+Disallow: /*.config.*
+Disallow: /.*
+
+# Cho phép sitemap
+Allow: /sitemap.xml
+Allow: /robots.txt
+
+Sitemap: https://fe-eco.onrender.com/sitemap.xml
