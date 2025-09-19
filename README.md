@@ -5,14 +5,14 @@ A modern, full-featured e-commerce platform built with NestJS backend and React 
 ## Architecture Overview
 
 ```
-📦 E-Commerce Platform
-├── 🔧 Backend (NestJS)
+E-Commerce Platform
+├── Backend (NestJS)
 │   ├── REST API with JWT Authentication
 │   ├── PostgreSQL Database with Prisma ORM
 │   ├── Payment Gateway Integration (PayPal, VNPay)
 │   ├── File Upload & Management
 │   └── Admin Dashboard APIs
-└── 🎨 Frontend (React + Vite)
+└── Frontend (React + Vite)
     ├── Server-Side Rendering (SSR)
     ├── Redux State Management
     ├── Material-UI Components
@@ -84,7 +84,7 @@ A modern, full-featured e-commerce platform built with NestJS backend and React 
 - **Reviews**: Product rating system
 - **Wishlist**: Customer favorites
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18 or higher)
@@ -142,7 +142,7 @@ npm run build
 npm run serve
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -232,7 +232,7 @@ POST   /api/v1/payments/paypal/create    # Create PayPal payment
 POST   /api/v1/payments/paypal/execute   # Execute PayPal payment
 ```
 
-## 🗄️ Database Schema
+## Database Schema
 
 ### Core Tables
 - `Users`: Customer accounts and admin users
